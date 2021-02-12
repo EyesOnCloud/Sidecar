@@ -1,21 +1,26 @@
 apiVersion: v1
 kind: Pod
 metadata:
-  name: sidecar
+  name: sidecar-container-demo
 spec:
   containers:
-  - name: debian-container
-    image: debian
-    volumeMounts:
-    - name: shared-data
-      mountPath: /pod-data
+  - image: busybox
     command: ["/bin/sh"]
-    args: ["-c", "echo Hello from the debian container > /pod-data/index.html"]
-  - name: nginx-container
-    image: nginx
+    args: ["-c", "while true; do echo echo $(date -u) 'Hi I am from Sidecar container' >> /var/log/index.html; sleep 5;done"]
+    name: sidecar-container
+    resources: {}
     volumeMounts:
-    - name: shared-data
+    - name: var-logs
+      mountPath: /var/log
+  - image: nginx
+    name: main-container
+    resources: {}
+    ports:
+      - containerPort: 80
+    volumeMounts:
+    - name: var-logs
       mountPath: /usr/share/nginx/html
+  dnsPolicy: Default
   volumes:
-  - name: shared-data
+  - name: var-logs
     emptyDir: {}
