@@ -7,7 +7,7 @@ spec:
   - name: sidecar-container
     image: alpine
     command: ["/bin/sh"]
-    args: ["-c", "while true; do echo echo $(date -u) 'Hi I am from Sidecar container' >> /var/log/index.html; sleep 5;done"]
+    args: ["-c", "while true; do echo $(date -u) 'Hi, I am from Sidecar container' >> /var/log/index.html; sleep 5;done"]
     volumeMounts:
     - name: var-logs
       mountPath: /var/log
